@@ -1,0 +1,49 @@
+import os
+import json
+import logging
+import argparse
+from uuid import uuid4
+from .main import NetmomCheck
+from .utils import logger, setup_logger, get_path
+
+def client():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s", "--settings", help="Path to the settings json", type=str, default="settings.json")
+    parser.add_argument("-v", "--verbose", help="The verbosity level, 0 = Warning, 1 = Info, 2 = Debug", type=str)
+
+    login_settings = parser.add_argument_group('login settings')
+    login_settings.add_argument("identId", help="", type=str)
+    snmpwalk_settings = parser.add_argument_group('snmpwalk settings')
+    snmpwalk_settings.add_argument("-C", "--community", help="Password for the walk", type=str)
+    snmpwalk_settings.add_argument("-H", "--host", help="The host on which the walk will be executed", type=str)
+    query_settings = parser.add_argument_group('query settings')
+    query_settings.add_argument("-D", "--database" help="The mysql database to use", type=str)
+    query_settings.add_argument("-Q", "--query", help="The query to use to extract the mac addresses", type=str)
+    tresholds_settings = parser.add_argument_group('tresholds settings')
+    tresholds_settings.add_argument("-w", "--warning" help="The warning threshold", type=int)
+    tresholds_settings.add_argument("-c", "--critical" help="The critical threshold", type=int)
+
+    args = vars(parser.parse_args())
+
+    settings_path = os.path.join(
+        get_path(),
+        args["settings"]
+    )
+    with open(, "r") as f:
+        settings = json.load(f)
+
+    # Override the settings default with the arguments values 
+    settings.update(args)
+
+    setup_logger(
+        get_path(),
+        None,
+        uuid4(),
+        log_level={
+            0:logging.WARNING,
+            1:logging.INFO,
+            2:logging.DEBUG
+        }.get(int(settings["verbose"]), logging.WARNING)
+    )
+
+    NetmomCheck(settings).run()

@@ -1,0 +1,7 @@
+#!/bin/bash
+# netmom_check is a free software developed by Tommaso Fontana for Würth Phoenix S.r.l. under GPL-2 License.
+DIR=$(dirname "$(python -c "import os,sys; print(os.path.realpath(sys.argv[1]))" $0)")
+(\
+    cd $DIR;\
+    python -c "import netmom_check; netmom_check.client()" $@
+)
