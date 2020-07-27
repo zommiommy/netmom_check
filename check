@@ -3,5 +3,5 @@
 DIR=$(dirname "$(python -c "import os,sys; print(os.path.realpath(sys.argv[1]))" $0)")
 (\
     cd $DIR;\
-    python -c "import netmom_check; netmom_check.client()" $@
+    python3 -c "import netmom_check; netmom_check.client()" $@
 )

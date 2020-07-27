@@ -1,3 +1,4 @@
+import re
 import sys
 import mysql.connector
 from .utils import logger, shell
@@ -19,7 +20,7 @@ class NetmomCheck:
             if m is not None:
                 values = m.groupdict()
                 results[values["ip"]] = values
-        logger.info("snmp results: %s"%results)
+        logger.debug("snmp results: %s"%results)
         return results
 
     def retreive_snmp_infos(self):
@@ -28,17 +29,17 @@ class NetmomCheck:
         interface_indices = self._extract_from_snmpwalk("interface_index_table", "interface_index_regex")
 
         items = {}
-        for ip in mac_address.keys():
-            obj = mac_address[ip]
+        for ip in mac_addresses.keys():
+            obj = mac_addresses[ip]
             obj.update(types[ip])
             obj.update(interface_indices[ip])
             items[ip] = obj
-        
+
         for ip, obj in items.items():
             output = shell(
                 self.settings["snmpwalk_command"].format(
                     table=self.settings["port_table"].format(
-                        obj["interface_index"]
+                        **obj
                     ), 
                     **self.settings
                 ), 
@@ -51,11 +52,12 @@ class NetmomCheck:
 
         
     def retreive_known_mac_addresses(self):
+        return ["60:9c:9f:5c:2f:94"]
         mydb = mysql.connector.connect(
             host=self.settings["mysql_url"],
             user=self.settings["user"],
             password=self.settings["password"],
-            database=self.settings["mydatabase"]
+            database=self.settings["database"]
         )
         cursor = mydb.cursor()
         cursor.execute(self.settings["query"])
@@ -68,9 +70,11 @@ class NetmomCheck:
 
     def run(self):
         items = self.retreive_snmp_infos()
+        logger.info("Values extracted from snmpwalks %s"%items)
         known_mac_addresses = self.retreive_known_mac_addresses()
+        logger.info("Mac addresses found in the mysqldb %s"%known_mac_addresses)
         unknown_items = [
-            x for x in items
+            x for x in items.values()
             if x["mac_address"] not in known_mac_addresses
         ]
 
