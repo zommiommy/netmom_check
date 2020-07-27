@@ -19,6 +19,7 @@ class NetmomCheck:
             if m is not None:
                 values = m.groupdict()
                 results[values["ip"]] = values
+        logger.info("snmp results: %s"%results)
         return results
 
     def retreive_snmp_infos(self):
@@ -59,15 +60,15 @@ class NetmomCheck:
         cursor = mydb.cursor()
         cursor.execute(self.settings["query"])
         result = cursor.fetchall()
+        cursor.close()
+        mydb.close()
         # the result it's a list of tuples, the mac address MUST be the first result
         flattened = [x[0] for x in my_result]
+        return flattened
 
     def run(self):
-
-        items = self.get_items()
-
+        items = self.retreive_snmp_infos()
         known_mac_addresses = self.retreive_known_mac_addresses()
-
         unknown_items = [
             x for x in items
             if x["mac_address"] not in known_mac_addresses
