@@ -1,7 +1,6 @@
 import re
 import sys
-import mysql.connector
-from .utils import logger, shell
+from .utils import logger, shell, normalize_mac_address
 
 class NetmomCheck:
 
@@ -52,24 +51,17 @@ class NetmomCheck:
 
         
     def retreive_known_mac_addresses(self):
-        return ["60:9c:9f:5c:2f:94"]
-        mydb = mysql.connector.connect(
-            host=self.settings["mysql_url"],
-            user=self.settings["user"],
-            password=self.settings["password"],
-            database=self.settings["database"]
-        )
-        cursor = mydb.cursor()
-        cursor.execute(self.settings["query"])
-        result = cursor.fetchall()
-        cursor.close()
-        mydb.close()
-        # the result it's a list of tuples, the mac address MUST be the first result
-        flattened = [x[0] for x in my_result]
-        return flattened
+        mac_addresses = shell("""echo "{query};" | mysql {database}""".format(**self.settings), capture_stdout=True)
+        return [
+            normalize_mac_address(x)
+            for x in mac_addresses.split("\n")[1:]
+        ]
 
     def run(self):
         items = self.retreive_snmp_infos()
+        for k, v in items.items():
+            items[k]["mac_address"] = normalize_mac_address(v[["mac_address"]])
+
         logger.info("Values extracted from snmpwalks %s"%items)
         known_mac_addresses = self.retreive_known_mac_addresses()
         logger.info("Mac addresses found in the mysqldb %s"%known_mac_addresses)
