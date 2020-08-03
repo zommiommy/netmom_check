@@ -69,6 +69,12 @@ class NetmomCheck:
             x for x in items.values()
             if x["mac_address"] not in known_mac_addresses
         ]
+        known_items = [
+            x for x in items.values()
+            if x["mac_address"] in known_mac_addresses
+        ]
+
+        logger.info("Mac addresses known:\n%s"%known_items)
 
         for group in unknown_items:
             print(self.settings["output_format"].format(**group))
