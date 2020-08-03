@@ -60,7 +60,7 @@ class NetmomCheck:
     def run(self):
         items = self.retreive_snmp_infos()
         for k, v in items.items():
-            items[k]["mac_address"] = normalize_mac_address(v[["mac_address"]])
+            items[k]["mac_address"] = normalize_mac_address(v["mac_address"])
 
         logger.info("Values extracted from snmpwalks %s"%items)
         known_mac_addresses = self.retreive_known_mac_addresses()
