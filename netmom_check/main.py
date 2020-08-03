@@ -51,7 +51,7 @@ class NetmomCheck:
 
         
     def retreive_known_mac_addresses(self):
-        mac_addresses = shell("""echo "{query};" | mysql {database}""".format(**self.settings), capture_stdout=True)
+        mac_addresses = shell(self.settings["query_command"].format(**self.settings), capture_stdout=True)
         return [
             normalize_mac_address(x)
             for x in mac_addresses.split("\n")[1:]

@@ -4,6 +4,7 @@
     "verbose":0,
     "database":"glt",
     "query":"SELECT macaddr FROM networks;",
+    "query_command":"echo \"{query};\" | mysql {database}",
     "host":"213.149.202.19",
     "community":"tux",
     "snmpwalk_command":"snmpwalk -v2c -c {community} {host} {table}",
