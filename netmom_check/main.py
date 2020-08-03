@@ -79,8 +79,8 @@ class NetmomCheck:
         print(self.settings["summary_format"].format(
             unknown_ip_count=len(unknown_items),
             known_ip_count=len(known_items),
-            unknown_mac_count=len(set(x["mac_address"] for x in unknown_items.values())),
-            known_mac_count=len(set(x["mac_address"] for x in known_items.values())),
+            unknown_mac_count=len(set(x["mac_address"] for x in unknown_items)),
+            known_mac_count=len(set(x["mac_address"] for x in known_items)),
         ))
         for group in unknown_items:
             print(self.settings["output_format"].format(**group))
