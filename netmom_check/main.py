@@ -76,18 +76,32 @@ class NetmomCheck:
 
         logger.info("Mac addresses known:\n%s"%known_items)
 
+        if self.settings["use-mac-addresses"]:
+            metric = len(set(x["mac_address"] for x in unknown_items))
+        else:
+            metric = len(unknown_items)
+
+        if metric >= self.settings["critical"]:
+            status = "critical"
+            exit_code = 2
+        elif metric >= self.settings["warning"]:
+            status = "warning"
+            exit_code = 1
+        else:
+            status = "ok"
+            exit_code = 0
+    
+        # print the summary
         print(self.settings["summary_format"].format(
+            status=status,
+            exit_cod=exit_code,
             unknown_ip_count=len(unknown_items),
             known_ip_count=len(known_items),
             unknown_mac_count=len(set(x["mac_address"] for x in unknown_items)),
             known_mac_count=len(set(x["mac_address"] for x in known_items)),
         ))
+        # Print the info for each ip
         for group in unknown_items:
             print(self.settings["output_format"].format(**group))
 
-        if len(unknown_items) >= self.settings["critical"]:
-            sys.exit(2)
-        elif len(unknown_items) >= self.settings["warning"]:
-            sys.exit(1)
-        else:
-            sys.exit(0)
+        sys.exit(exit_code)
