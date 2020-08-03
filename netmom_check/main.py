@@ -93,7 +93,7 @@ class NetmomCheck:
     
         # print the summary
         print(self.settings["summary_format"].format(
-            status=status,
+            status=status.upper(),
             exit_cod=exit_code,
             unknown_ip_count=len(unknown_items),
             known_ip_count=len(known_items),
