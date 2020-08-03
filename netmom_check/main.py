@@ -77,8 +77,10 @@ class NetmomCheck:
         logger.info("Mac addresses known:\n%s"%known_items)
 
         print(self.settings["summary_format"].format(
-            unknown_count=len(unknown_items),
-            known_count=len(known_items),
+            unknown_ip_count=len(unknown_items),
+            known_ip_count=len(known_items),
+            unknown_mac_count=len(set(x["mac_address"] for x in unknown_items.values())),
+            known_mac_count=len(set(x["mac_address"] for x in known_items.values())),
         ))
         for group in unknown_items:
             print(self.settings["output_format"].format(**group))
