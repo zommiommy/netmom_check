@@ -9,7 +9,7 @@ from .utils import logger, setup_logger, get_path
 def client():
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--settings", help="Path to the settings json", type=str, default="settings.json")
-    parser.add_argument("-v", "--verbose", help="The verbosity level, 0 = Warning, 1 = Info, 2 = Debug", type=str)
+    parser.add_argument("-v", "--verbose", help="The verbosity level, 0 = Summary, 1 = Detailed, 2 = Info, 3 = Debug", type=str)
 
     snmpwalk_settings = parser.add_argument_group('snmpwalk settings')
     snmpwalk_settings.add_argument("-C", "--community", help="Password for the walk", type=str)
@@ -41,8 +41,9 @@ def client():
         uuid4(),
         log_level={
             0:logging.WARNING,
-            1:logging.INFO,
-            2:logging.DEBUG
+            1:logging.WARNING,
+            2:logging.INFO,
+            3:logging.DEBUG
         }.get(int(settings["verbose"]), logging.WARNING)
     )
     NetmomCheck(settings).run()

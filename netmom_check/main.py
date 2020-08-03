@@ -94,14 +94,15 @@ class NetmomCheck:
         # print the summary
         print(self.settings["summary_format"].format(
             status=status.upper(),
-            exit_cod=exit_code,
+            exit_code=exit_code,
             unknown_ip_count=len(unknown_items),
             known_ip_count=len(known_items),
             unknown_mac_count=len(set(x["mac_address"] for x in unknown_items)),
             known_mac_count=len(set(x["mac_address"] for x in known_items)),
         ))
         # Print the info for each ip
-        for group in unknown_items:
-            print(self.settings["output_format"].format(**group))
+        if self.settings["verbose"] >= 1:
+            for group in unknown_items:
+                print(self.settings["output_format"].format(**group))
 
         sys.exit(exit_code)
