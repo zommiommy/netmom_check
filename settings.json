@@ -14,6 +14,6 @@
     "type_table":"IP-MIB::ipNetToMediaType",
     "type_regex":".+\\.(?P<ip>\\d{1,3}(\\.\\d{1,3}){3}).+: (?P<type>.+)",
     "port_table":"IF-MIB::ifDescr.{interface_index}",
-    "port_regex":".+\\.(?P<interaface_index>\\d+) .+: (?P<port>.+)",
+    "port_regex":".+\\.(?P<interface_index>\\d+) .+: (?P<port>.+)",
     "output_format":"Ip address {ip} di tipo {type} con mac-address {mac_address} su porta {port}"
 }
