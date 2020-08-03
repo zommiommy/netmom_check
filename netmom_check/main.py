@@ -76,7 +76,7 @@ class NetmomCheck:
 
         logger.info("Mac addresses known:\n%s"%known_items)
 
-        if self.settings["use-mac-addresses"]:
+        if self.settings["use_mac_addresses"]:
             metric = len(set(x["mac_address"] for x in unknown_items))
         else:
             metric = len(unknown_items)
