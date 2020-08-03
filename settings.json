@@ -15,6 +15,6 @@
     "type_regex":".+\\.(?P<ip>\\d{1,3}(\\.\\d{1,3}){3}).+: (?P<type>.+)",
     "port_table":"IF-MIB::ifDescr.{interface_index}",
     "port_regex":".+\\.(?P<interface_index>\\d+) .+: (?P<port>.+)",
-    "output_format":"Status: {status}\nIp address {ip} di tipo {type} con mac-address {mac_address} su porta {port}",
-    "summary_format":"Trovati {unknown_ip_count} indirizzi sconosciuti e {known_ip_count} conosciuti"
+    "output_format":"Ip address {ip} di tipo {type} con mac-address {mac_address} su porta {port}",
+    "summary_format":"Status: {status}\nTrovati {unknown_ip_count} indirizzi sconosciuti e {known_ip_count} conosciuti"
 }
