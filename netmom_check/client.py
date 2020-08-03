@@ -20,7 +20,7 @@ def client():
     tresholds_settings = parser.add_argument_group('tresholds settings')
     tresholds_settings.add_argument("-w", "--warning", help="The warning threshold", type=int)
     tresholds_settings.add_argument("-c", "--critical", help="The critical threshold", type=int)
-    tresholds_settings.add_argument("-m", "--use-mac-addresses", help="Use the number of uniques mac addresses instead of the number of Ips", action="stroe_true", default=False)
+    tresholds_settings.add_argument("-m", "--use-mac-addresses", help="Use the number of uniques mac addresses instead of the number of Ips", action="store_true", default=False)
 
     args = vars(parser.parse_args())
     args = {k:v for k, v in args.items() if v is not None}
