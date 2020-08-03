@@ -1,6 +1,6 @@
 
 def normalize_hex(hex_value):
-    hex_value = hex_value.lower()
+    hex_value = hex_value.lower().strip()
     if len(hex_value) == 0:
         hex_value = "00"
     if len(hex_value) == 1:
